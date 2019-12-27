@@ -1,78 +1,112 @@
 #include <iostream>
-#include <math.h>
-
 using namespace std;
-
-
-struct DONTHUC{
-	float heso;
-	float somu; 
+struct DONTHUC
+{
+	int heso;
+	int somu;
 };
-
-void nhapdonthuc(DONTHUC &dt)
+struct PHANSO
 {
-	cout<<"Nhap he so:";
-	cin>>dt.heso;
-	cout<<"Nhap so mu:";
-	cin>>dt.somu;
-}
-
-
-void xuatdonthuc(DONTHUC &dt)
+	int tu;
+	int mau;
+};
+void nhapDonThuc(DONTHUC& a);
+void xuatDonThuc(DONTHUC a);
+void tich(DONTHUC a, DONTHUC b);
+void thuong(DONTHUC a, DONTHUC b);
+void daoHam(DONTHUC a);
+void giaTriDonThucTaiX0(DONTHUC a, int x);
+int UCLN(int a, int b)
 {
-	cout<<"He so la:"<<dt.heso<<endl;
-	cout<<"So mu la:"<<dt.somu<<endl;
+	while (a != b)
+	{
+		if (a > b) a -= b;
+		else b -= a;
+	}
+	return a;
 }
-
-
-DONTHUC tichdonthuc(DONTHUC &a,DONTHUC &b){
-	DONTHUC c;
-	c.heso =a.heso*b.heso;
-	c.somu =a.somu*b.somu;
-	return c;
+void rutGonPhanSo(PHANSO& a)
+{
+	int x = UCLN(a.tu, a.mau);
+	a.tu /= x;
+	a.mau /= x;
 }
-
-DONTHUC thuongdonthuc(DONTHUC &a,DONTHUC &b){
-	DONTHUC c;
-	c.heso =a.heso/b.heso;
-	c.somu = a.somu-b.somu;
-	return c;
-}
-
-
-
-DONTHUC daohamcap1(DONTHUC &dt){
-	DONTHUC c;
-	c.heso = dt.heso*dt.somu;
-	c.somu = dt.somu - 1;
-	return c;
-}
-
-
-int tinhgiadonthuc(DONTHUC &dt,int n){
-	int giatridt;
-	giatridt = dt.heso*(pow(n,dt.somu));
-	return giatridt;
-}
-
-int main(){
-	DONTHUC a,b;
-	int n;
-	nhapdonthuc(a);
-	nhapdonthuc(b);
-	cout<<"Nhap gia tri x0: ";
-	cin>>n;
-	cout<<"Gia tri cua don thuc tai x0: "<<tinhgiadonthuc(a,n)<<"\t"<<tinhgiadonthuc(b,n)<<endl;
-	DONTHUC c = tichdonthuc(a,b);
-	DONTHUC d = thuongdonthuc(a,b);
-	cout<<"Tich cua don thuc: "<<endl;
-	xuatdonthuc(c);
-	cout<<"Thuong cua don thuc: "<<endl;
-	xuatdonthuc(d);
-	cout<<"Dao ham cap mot cua don thuc: "<<endl;
-	DONTHUC e = daohamcap1(a);
-	xuatdonthuc(e);
-	DONTHUC h = daohamcap1(b);
-	xuatdonthuc(h);
+int main()
+{
+	DONTHUC x1, x2;
+	int x0;
+	cout << "Moi ban nhap don thuc thu nhat:\n";
+	nhapDonThuc(x1);
+	cout << "Don thuc ban vua nhap la:\t"; xuatDonThuc(x1);
+	cout << "Nhap x0: "; cin >> x0;
+	giaTriDonThucTaiX0(x1, x0);
+	daoHam(x1);
+	cout << "-------------------------------------\n";
+	cout << "Moi ban nhap don thuc thu hai:\n";
+	nhapDonThuc(x2);
+	cout << "Don thuc ban vua nhap la:\t"; xuatDonThuc(x2);
+	cout << "Nhap x0: "; cin >> x0;
+	giaTriDonThucTaiX0(x2, x0);
+	daoHam(x2);
+	cout << "-------------------------------------\n";
+	tich(x1, x2);
+	thuong(x1, x2);
 	return 0;
+}
+void giaTriDonThucTaiX0(DONTHUC a, int x)
+{
+	cout << "Gia tri cua don thuc tai x0 la:\t";
+	if (x == 0) cout << "0\n";
+	else
+	{
+		int s = 1;
+		for (int i = 1; i <= a.somu; i++)
+			s *= x;
+		cout << a.heso * s << endl;
+	}
+	
+}
+void daoHam(DONTHUC a)
+{
+	DONTHUC c;
+	c.heso = a.heso * a.somu;
+	c.somu = a.somu - 1;
+	cout << "Don thuc sau khi dao ham la:\t";
+	if (c.heso == 0) cout << "0\n";
+	else if (c.somu == 0) cout << c.heso << endl;
+	else xuatDonThuc(c);
+}
+void thuong(DONTHUC a, DONTHUC b)
+{
+	DONTHUC c;
+	c.somu = a.somu - b.somu;
+	PHANSO d;
+	d.tu = a.heso;
+	d.mau = b.heso;
+	rutGonPhanSo(d);
+	if (c.somu == 0) cout << "Thuong cua hai don thuc la:\t" << d.tu << "/" << d.mau;
+	else cout << "Thuong cua hai don thuc la:\t (" << d.tu << "/" << d.mau << ")x^" << c.somu << endl;
+
+}
+void tich(DONTHUC a, DONTHUC b)
+{
+	DONTHUC c;
+	c.heso = a.heso * b.heso;
+	c.somu = a.somu + b.somu;
+	cout << "Tich cua hai don thuc la:\t";
+	xuatDonThuc(c);
+}
+void xuatDonThuc(DONTHUC a)
+{
+	if ((a.heso == 1) && a.somu) cout << "x^" << a.somu << endl;
+	else if (a.somu == 0) cout << a.heso << endl;
+	else cout << a.heso << "x^" << a.somu << endl;
+}
+void nhapDonThuc(DONTHUC &a)
+{
+	do
+	{
+		cout << "Nhap he so: "; cin >> a.heso;
+	} while (a.heso == 0);
+	cout << "Nhap so mu: "; cin >> a.somu;
 }
